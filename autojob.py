@@ -13,32 +13,32 @@ class autoJob():
         self.getfile()
 
     # function to copy a variable to the clipboard
-    def addToClip(text):
+    def addToClip(self, text):
         if(type(text) == str):
             command = 'echo ' + text + '| clip'
             os.system(command)
 
     # This does all the leg work
-    def humanJob(serial):
+    def humanJob(self, serial):
         # print(serial)
-
-        autoJob.addToClip(serial)
-        # print(type(serial), serial)
+        self.addToClip(serial)
+        print(type(serial), serial)
 
     def getfile(self):
-        filePath = input("Please enter the full path of the spreadsheet: ")
+        filePath = raw_input("Please enter the full path of the spreadsheet:")
         # print(filePath)
-        # returnDate = input("Please enter the date in mm/dd/yyyy format for day of trade in: ")
-
+        # returnDate = input("Please enter the date in mm/dd/yyyy format for day"
+        #                    " of trade in: ")
         wb = openpyxl.load_workbook(filePath)
         # print(type(wb))
 
-        # fetch all the sheets in the workbook
+        # fetch the sheets of the workbook
         for x in wb.get_sheet_names():
             currSheet = wb.get_sheet_by_name(x)
-            # print(wb.get_sheet_names()[x])
             for i in range(1, currSheet.max_row+1):
-                # print(currSheet.cell(row=i, column=1).value, currSheet)
-                autoJob.humanJob(currSheet.cell(row=i, column=1).value)
+                if type(currSheet.cell(row=i, column=1).value) == unicode:
+                    regString = currSheet.cell(row=i, column=1).value.encode('ascii', 'ignore')
+                    self.humanJob(regString)
+                    # print(currSheet.cell(row=i, column=1).value)
 
 autoJob()
