@@ -4,7 +4,9 @@
 # Move through with ? tabs and down arrow twice.
 # Move through with ? tabs and up/down arrow depending on what is selected.
 # Tab ? times and input the custom date. Tab to save and complete, loop.
-import webbrowser, sys, openpyxl, bs4, os
+import openpyxl
+import os
+import urllib
 
 class autoJob():
     def __init__(self):
@@ -19,6 +21,7 @@ class autoJob():
     # This does all the leg work
     def humanJob(serial):
         # print(serial)
+
         autoJob.addToClip(serial)
         # print(type(serial), serial)
 
