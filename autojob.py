@@ -9,13 +9,11 @@ import time
 
 class AutoJob:
     def __init__(self):
-        ctypes.windll.user32.keybd_event(0x12, 0, 0, 0)  # alt
-        ctypes.windll.user32.keybd_event(0x09, 0, 0, 0)  # tab
-        time.sleep(1)  # wait 2
-        ctypes.windll.user32.keybd_event(0x09, 0, 2, 0)  # !alt
-        ctypes.windll.user32.keybd_event(0x012, 0, 2, 0)  # !tab
-
-        self.get_file()
+        full_or_not = raw_input("Type Full or Sheet Name:")
+        if full_or_not != 'Full':
+            self.get_sheet(full_or_not)
+        else:
+            self.get_file()
 
     def alt_tab(self):
         ctypes.windll.user32.keybd_event(0x12, 0, 0, 0)  # alt
@@ -75,6 +73,13 @@ class AutoJob:
         time.sleep(0.2)
         self.enter()
 
+    def save_exit(self):
+        for i in range(6):
+            print('Save')
+            self.tab()
+            time.sleep(0.2)
+        self.enter()
+
     def cancel_butt(self):
         for i in range(8):
             print('Cancel')
@@ -125,18 +130,13 @@ class AutoJob:
         time.sleep(1)
         self.change_date()
         time.sleep(1)
-        self.cancel_butt()
+        self.save_exit()
         time.sleep(1)
 
     def get_file(self):
-        # filePath = raw_input("Please enter the full path of the spreadsheet:")
-        # print(filePath)
-        # returnDate = input("Please enter the date in mm/dd/yyyy format for day"
-        #                    " of trade in: ")
-        # wb = openpyxl.load_workbook(filePath)
+        self.alt_tab()
         wb = openpyxl.load_workbook('test.xlsx')
         # print(type(wb))
-
         # fetch the sheets of the workbook
         for x in wb.get_sheet_names():
             curr_sheet = wb.get_sheet_by_name(x)
@@ -147,4 +147,15 @@ class AutoJob:
                     # print(currSheet.cell(row=i, column=1).value)
             time.sleep(1)
             self.check_tab()
+
+    def get_sheet(self, sheet):
+        self.alt_tab()
+        wb = openpyxl.load_workbook('test.xlsx')
+        curr_sheet = wb.get_sheet_by_name(sheet)
+        for i in range(1, curr_sheet.max_row + 1):
+            if type(curr_sheet.cell(row=i, column=1).value) == unicode:
+                reg_string = curr_sheet.cell(row=i, column=1).value.encode('ascii', 'ignore')
+                self.human_job(reg_string)
+                # print(currSheet.cell(row=i, column=1).value)
+
 AutoJob()
